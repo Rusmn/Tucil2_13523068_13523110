@@ -115,7 +115,52 @@ double calcMaxDiff(unsigned char *imgData, int imgW, int imgH, int chn, int x, i
 }
 
 // Menghitung entropi warna dalam blok gambar
-double calcEntropy(unsigned char *imgData, int imgW, int imgH, int chn, int x, int y, int w, int h);
+double calcEntropy(unsigned char *imgData, int imgW, int imgH, int chn, int x, int y, int w, int h){
+    int freqR[256] = {0};
+    int freqG[256] = {0};
+    int freqB[256] = {0};
+    int total = w * h;
+
+    for (int i = x; i < x + w; ++i) {
+        for (int j = y; j < y + h; ++j) {
+            int idx = (j * imgW + i) * chn;
+            freqR[imgData[idx]]++;
+            freqG[imgData[idx + 1]]++;
+            freqB[imgData[idx + 2]]++;
+        }
+    }
+
+    auto calcOneEntropy = [](int freq[256], int total) -> double {
+        double entropy = 0.0;
+        for (int k = 0; k < 256; ++k) {
+            if (freq[k] > 0) {
+                double p = (double)freq[k] / total;
+                entropy -= p * log2(p);
+            }
+        }
+        return entropy;
+    };
+
+    double entropyR = calcOneEntropy(freqR, total);
+    double entropyG = calcOneEntropy(freqG, total);
+    double entropyB = calcOneEntropy(freqB, total);
+
+    return (entropyR + entropyG + entropyB) / 3.0;
+}
+    
 
 // Memilih dan memanggil metode pengukuran error yang sesuai
-double calcError(unsigned char* imgData, int imgW, int imgH, int chn, int x, int y, int w, int h, int method);
+double calcError(unsigned char* imgData, int imgW, int imgH, int chn, int x, int y, int w, int h, int method){
+    switch (method) {
+        case 1:
+            return calcVar(imgData, imgW, imgH, chn, x, y, w, h);
+        case 2:
+            return calcMAD(imgData, imgW, imgH, chn, x, y, w, h);
+        case 3:
+            return calcMaxDiff(imgData, imgW, imgH, chn, x, y, w, h);
+        case 4:
+            return calcEntropy(imgData, imgW, imgH, chn, x, y, w, h);
+        default:
+            return -1.0; // Error code
+    }
+}
