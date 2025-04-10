@@ -2,6 +2,8 @@
 #define QUADTREE_HPP
 
 #include <cstddef>
+#include <algorithm>
+#include <functional>
 using namespace std;
 
 // Struktur node untuk quadtree
