@@ -87,7 +87,32 @@ double calcMAD(unsigned char *imgData, int imgW, int imgH, int chn, int x, int y
 }
 
 // Menghitung perbedaan maksimum piksel dalam blok gambar
-double calcMaxDiff(unsigned char *imgData, int imgW, int imgH, int chn, int x, int y, int w, int h);
+double calcMaxDiff(unsigned char *imgData, int imgW, int imgH, int chn, int x, int y, int w, int h){
+    double maxDiff[3] = {0.0, 0.0, 0.0};
+    int count = 0;
+
+    // Menghitung perbedaan maksimum tiap channel dalam blok gambar
+    for (int i = y; i < y + h; i++) {
+        for (int j = x; j < x + w; j++) {
+            int idx = (i * imgW + j) * chn;
+            for (int c = 0; c < chn; c++) {
+                int val = imgData[idx + c];
+                minVal[c] = min(minVal[c], val);
+                maxVal[c] = max(maxVal[c], val);
+            }
+            count++;
+        }
+    }
+
+    double sumOfMaxDiffs = 0.0;
+    for(int c = 0; c < chn; c++) {
+        maxDiff = maxVal[c] - minVal[c]; // Menghitung perbedaan maksimum tiap channel
+        sumOfMaxDiffs += maxDiff; // Menghitung jumlah dari perbedaan maksimum tiap channel
+    }
+
+    double meanOfMaxDiffs = sumOfMaxDiffs / chn; // Menghitung rata-rata dari perbedaan maksimum
+    return meanOfMaxDiffs;
+}
 
 // Menghitung entropi warna dalam blok gambar
 double calcEntropy(unsigned char *imgData, int imgW, int imgH, int chn, int x, int y, int w, int h);
