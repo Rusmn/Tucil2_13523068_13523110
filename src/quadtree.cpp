@@ -2,37 +2,37 @@
 #include "error_metrics.hpp"
 #include "image_utils.hpp"
 
-//helper build Quadtree
-QNode *quadTree(unsigned char *imgData, int imgW, int imgH, int chn, int x, int y, int w, int h, int minBlk, double thresh, int errMethod, QStats& stats, int depth) {
+QNode *quadTree(unsigned char *imgData, int imgW, int imgH, int chn, int x, int y, int w, int h, int minBlk, double thresh, int errMethod, QStats &stats, int depth) {
     QNode *node = new QNode();
     node->x = x;
     node->y = y;
     node->w = w;
     node->h = h;
-    
+
     calcAvgColor(imgData, imgW, imgH, chn, x, y, w, h, node->r, node->g, node->b);
-    
+
     stats.nodeCount++;
     stats.maxDepth = max(stats.maxDepth, depth);
-    
-    //DIVIDE
+
     if (w > minBlk && h > minBlk) {
-        
         double error = calcError(imgData, imgW, imgH, chn, x, y, w, h, errMethod);
         
-        // Jika error melebihi threshold, bagi menjadi 4 blok (DIVIDE)
         if (error > thresh) {
             int halfW = w / 2;
             int halfH = h / 2;
-            
-            //CONQUER
-            node->child[0] = quadTree(imgData, imgW, imgH, chn, x, y, halfW, halfH, minBlk, thresh, errMethod, stats, depth + 1);
-            node->child[1] = quadTree(imgData, imgW, imgH, chn, x + halfW, y, halfW, halfH, minBlk, thresh, errMethod, stats, depth + 1);
-            node->child[2] = quadTree(imgData, imgW, imgH, chn, x, y + halfH, halfW, halfH, minBlk, thresh, errMethod, stats, depth + 1);
-            node->child[3] = quadTree(imgData, imgW, imgH, chn, x + halfW, y + halfH, halfW, halfH, minBlk, thresh, errMethod, stats, depth + 1);
+
+            int w1 = halfW;
+            int w2 = w - halfW;
+            int h1 = halfH;
+            int h2 = h - halfH;
+
+            node->child[0] = quadTree(imgData, imgW, imgH, chn, x, y, w1, h1, minBlk, thresh, errMethod, stats, depth + 1);
+            node->child[1] = quadTree(imgData, imgW, imgH, chn, x + w1, y, w2, h1, minBlk, thresh, errMethod, stats, depth + 1);
+            node->child[2] = quadTree(imgData, imgW, imgH, chn, x, y + h1, w1, h2, minBlk, thresh, errMethod, stats, depth + 1);
+            node->child[3] = quadTree(imgData, imgW, imgH, chn, x + w1, y + h1, w2, h2, minBlk, thresh, errMethod, stats, depth + 1);
         }
     }
-    
+
     return node;
 }
 

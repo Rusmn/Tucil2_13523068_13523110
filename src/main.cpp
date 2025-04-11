@@ -81,8 +81,6 @@ int main() {
     getline(cin, outPath);
     outPath = "test/" + outPath;
     
-    cout << "Masukkan path gif (kosongkan jika tidak digunakan): ";
-    getline(cin, gifPath);
     
     // Muat gambar dari file
     int w, h, ch;
@@ -109,7 +107,7 @@ int main() {
     
     // Inisialisasi outImg dengan latar belakang putih (255)
     for (int i = 0; i < w * h * ch; i++) {
-        outImg[i] = 0;
+        outImg[i] = 255;
     }
     
     // Gambar hasil kompresi
