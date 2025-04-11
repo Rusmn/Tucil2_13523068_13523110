@@ -1,5 +1,7 @@
 # Kompresi Gambar Dengan Metode Quadtree
 
+![Quadtree Header](doc/judul.png)
+
 ## Deskripsi Singkat
 
 Program ini mengimplementasikan algoritma kompresi gambar berbasis **Quadtree**, yaitu metode segmentasi citra yang membagi citra menjadi blok-blok berdasarkan kompleksitas nilai piksel. Program ini:
