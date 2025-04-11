@@ -31,8 +31,5 @@ void genImage(QNode *root, unsigned char *outImg, int imgW, int chn);
 // Membersihkan memori yang digunakan oleh quadtree
 void cleanQTree(QNode *root);
 
-// Membuat gambar dengan visualisasi blok-blok quadtree (untuk debugging)
-// Parameter drawBorder menentukan apakah border akan digambar (default: false)
-unsigned char *createDbgImg(QNode *root, int w, int h, int chn, bool drawBorder = false);
 
 #endif

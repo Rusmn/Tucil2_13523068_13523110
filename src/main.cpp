@@ -98,24 +98,7 @@ int main() {
     } else {
         cout << "Gambar berhasil disimpan di: " << outPath << endl;
     }
-    
-    // Jika perlu menyimpan visualisasi dengan border, buat file debug terpisah
-    if (!gifPath.empty()) {
-        // Buat nama file untuk gambar debug
-        string debugPath = outPath.substr(0, outPath.find_last_of('.')) + "_debug.png";
-        
-        // Buat gambar debug dengan visualisasi border
-        unsigned char *dbgImg = createDbgImg(root, w, h, ch, true);
-        
-        if (!stbi_write_png(debugPath.c_str(), w, h, ch, dbgImg, w * ch)) {
-            cerr << "Gagal menyimpan gambar debug!" << endl;
-        } else {
-            cout << "Gambar debug berhasil disimpan di: " << debugPath << endl;
-        }
-        
-        delete[] dbgImg;
-    }
-    
+     
     // Hitung dan tampilkan statistik kompresi
     stats.compSize = stats.nodeCount * sizeof(QNode);
     double compPerc = (1.0 - (double)stats.compSize / stats.origSize) * 100.0;
