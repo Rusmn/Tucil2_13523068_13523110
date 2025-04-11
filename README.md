@@ -1,13 +1,13 @@
 # Kompresi Gambar Dengan Metode Quadtree
 
-## a. Deskripsi Singkat
+## Deskripsi Singkat
 
 Program ini mengimplementasikan algoritma kompresi gambar berbasis **Quadtree**, yaitu metode segmentasi citra yang membagi citra menjadi blok-blok berdasarkan kompleksitas nilai piksel. Program ini:
 - Mendukung 4 metode pengukuran error: Variance, MAD (Mean Absolute Deviation), Max Diff, dan Entropy.
 - Memberikan opsi untuk menentukan nilai threshold, ukuran blok minimum, dan target kompresi.
 - Menyimpan hasil kompresi sebagai file gambar baru.
 
-## b. Requirements & Instalasi
+## Requirements & Instalasi
 
 - **Bahasa:** C++
 - **Compiler:** GCC / MinGW / Clang (support C++11 ke atas)
@@ -15,7 +15,7 @@ Program ini mengimplementasikan algoritma kompresi gambar berbasis **Quadtree**,
   - `stb_image.h` dan `stb_image_write.h` (sudah disertakan)
 - Tidak memerlukan library eksternal lain.
 
-## c. Instalasi & Kompilasi
+## Instalasi & Kompilasi
 
 ### 1. Clone Repositori
 ```bash
@@ -66,7 +66,7 @@ bin\main
 g++ src/main.cpp src/quadtree.cpp src/image_utils.cpp src/error_metrics.cpp -o bin/main
 ```
 
-## d. Cara Menjalankan & Menggunakan
+## Cara Menjalankan & Menggunakan
 (Selain kompilasi manual, langsung langkah 2)
 
 1. Jalankan file hasil kompilasi (dari folder `bin/`):
@@ -86,7 +86,7 @@ g++ src/main.cpp src/quadtree.cpp src/image_utils.cpp src/error_metrics.cpp -o b
     - Masukkan threshold, ukuran blok minimum, dan target kompresi
     - Masukkan nama file output (contoh: `output.png`)
 
-## e. Struktur Direktori
+## Struktur Direktori
 
 ```
 .
@@ -109,7 +109,7 @@ g++ src/main.cpp src/quadtree.cpp src/image_utils.cpp src/error_metrics.cpp -o b
 └── README.md
 ```
 
-## f. Author
+## Author
 
 | NIM       | Nama                        |
 |-----------|-----------------------------|
