@@ -51,7 +51,6 @@ void genImage(QNode *root, unsigned char *outImg, int imgW, int chn) {
         //COMBINE
         for (int y = root->y; y < root->y + root->h; y++) {
             for (int x = root->x; x < root->x + root->w; x++) {
-                // Pastikan kita tidak melewati batas gambar
                 if (x >= 0 && x < imgW && y >= 0) {
                     setPixel(outImg, imgW, x, y, chn, root->r, root->g, root->b);
                 }
