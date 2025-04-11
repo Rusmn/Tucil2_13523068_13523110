@@ -54,7 +54,10 @@ void genImage(QNode *root, unsigned char *outImg, int imgW, int chn) {
         //COMBINE
         for (int y = root->y; y < root->y + root->h; y++) {
             for (int x = root->x; x < root->x + root->w; x++) {
-                setPixel(outImg, imgW, x, y, chn, root->r, root->g, root->b);
+                // Pastikan kita tidak melewati batas gambar
+                if (x >= 0 && x < imgW && y >= 0) {
+                    setPixel(outImg, imgW, x, y, chn, root->r, root->g, root->b);
+                }
             }
         }
     } 
@@ -81,34 +84,52 @@ void cleanQTree(QNode *root) {
     delete root;
 }
 
-unsigned char *createDbgImg(QNode *root, int w, int h, int chn) {
+// Fungsi visualisasi debug - HANYA UNTUK VISUALISASI
+unsigned char *createDbgImg(QNode *root, int w, int h, int chn, bool drawBorder) {
     unsigned char *dbgImg = new unsigned char[w * h * chn];
     
+    // Inisialisasi putih
     for (int i = 0; i < w * h * chn; i++) {
         dbgImg[i] = 255;
     }
     
-    function<void(QNode*)> drawNode = [&](QNode *node) {
-        if (!node){
-            return;
-        }
+    std::function<void(QNode*)> drawNode = [&](QNode *node) {
+        if (!node) return;
         
+        // Warnai blok
         for (int y = node->y; y < node->y + node->h; y++) {
             for (int x = node->x; x < node->x + node->w; x++) {
-                setPixel(dbgImg, w, x, y, chn, node->r, node->g, node->b);
+                if (x >= 0 && x < w && y >= 0 && y < h) {  // Cek batas
+                    setPixel(dbgImg, w, x, y, chn, node->r, node->g, node->b);
+                }
             }
         }
         
-        for (int x = node->x; x < node->x + node->w; x++) {
-            setPixel(dbgImg, w, x, node->y, chn, 0, 0, 0);
-            setPixel(dbgImg, w, x, node->y + node->h - 1, chn, 0, 0, 0);
+        // Gambar border hanya jika drawBorder=true
+        if (drawBorder) {
+            // Gunakan warna abu-abu muda untuk border agar tidak terlalu mencolok
+            const int borderR = 220, borderG = 220, borderB = 220;
+            
+            // Gambar horizontal borders
+            for (int x = node->x; x < node->x + node->w; x++) {
+                if (x >= 0 && x < w && node->y >= 0 && node->y < h)
+                    setPixel(dbgImg, w, x, node->y, chn, borderR, borderG, borderB);
+                
+                if (x >= 0 && x < w && node->y + node->h - 1 >= 0 && node->y + node->h - 1 < h)
+                    setPixel(dbgImg, w, x, node->y + node->h - 1, chn, borderR, borderG, borderB);
+            }
+            
+            // Gambar vertical borders
+            for (int y = node->y; y < node->y + node->h; y++) {
+                if (node->x >= 0 && node->x < w && y >= 0 && y < h)
+                    setPixel(dbgImg, w, node->x, y, chn, borderR, borderG, borderB);
+                
+                if (node->x + node->w - 1 >= 0 && node->x + node->w - 1 < w && y >= 0 && y < h)
+                    setPixel(dbgImg, w, node->x + node->w - 1, y, chn, borderR, borderG, borderB);
+            }
         }
         
-        for (int y = node->y; y < node->y + node->h; y++) {
-            setPixel(dbgImg, w, node->x, y, chn, 0, 0, 0);
-            setPixel(dbgImg, w, node->x + node->w - 1, y, chn, 0, 0, 0);
-        }
-        
+        // Panggil rekursif untuk semua anak
         for (int i = 0; i < 4; i++) {
             if (node->child[i]) {
                 drawNode(node->child[i]);
