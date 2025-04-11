@@ -1,5 +1,5 @@
-#include "error_metrics.h"
-#include <bits/stdc++.h>
+#include "error_metrics.hpp"
+#include <algorithm>
 #include <cmath>
 using namespace std;
 
@@ -43,6 +43,7 @@ double calcVar(unsigned char *imgData, int imgW, int imgH, int chn, int x, int y
 
     double meanOfSquares = sumOfSquares / chn; // Menghitung rata-rata kuadrat dari variansi
     return meanOfSquares;
+}
 
 // Menghitung Mean Absolute Deviation dalam blok gambar
 double calcMAD(unsigned char *imgData, int imgW, int imgH, int chn, int x, int y, int w, int h){
@@ -88,10 +89,10 @@ double calcMAD(unsigned char *imgData, int imgW, int imgH, int chn, int x, int y
 
 // Menghitung perbedaan maksimum piksel dalam blok gambar
 double calcMaxDiff(unsigned char *imgData, int imgW, int imgH, int chn, int x, int y, int w, int h){
-    double maxDiff[3] = {0.0, 0.0, 0.0};
-    int count = 0;
+    int minVal[3] = {255, 255, 255};
+    int maxVal[3] = {0, 0, 0};
 
-    // Menghitung perbedaan maksimum tiap channel dalam blok gambar
+    // Menghitung nilai minimum dan maksimum tiap channel dalam blok gambar
     for (int i = y; i < y + h; i++) {
         for (int j = x; j < x + w; j++) {
             int idx = (i * imgW + j) * chn;
@@ -100,13 +101,12 @@ double calcMaxDiff(unsigned char *imgData, int imgW, int imgH, int chn, int x, i
                 minVal[c] = min(minVal[c], val);
                 maxVal[c] = max(maxVal[c], val);
             }
-            count++;
         }
     }
 
     double sumOfMaxDiffs = 0.0;
     for(int c = 0; c < chn; c++) {
-        maxDiff = maxVal[c] - minVal[c]; // Menghitung perbedaan maksimum tiap channel
+        double maxDiff = maxVal[c] - minVal[c]; // Menghitung perbedaan maksimum tiap channel
         sumOfMaxDiffs += maxDiff; // Menghitung jumlah dari perbedaan maksimum tiap channel
     }
 
@@ -121,9 +121,9 @@ double calcEntropy(unsigned char *imgData, int imgW, int imgH, int chn, int x, i
     int freqB[256] = {0};
     int total = w * h;
 
-    for (int i = x; i < x + w; ++i) {
-        for (int j = y; j < y + h; ++j) {
-            int idx = (j * imgW + i) * chn;
+    for (int i = y; i < y + h; ++i) {
+        for (int j = x; j < x + w; ++j) {
+            int idx = (i * imgW + j) * chn;
             freqR[imgData[idx]]++;
             freqG[imgData[idx + 1]]++;
             freqB[imgData[idx + 2]]++;
@@ -148,7 +148,6 @@ double calcEntropy(unsigned char *imgData, int imgW, int imgH, int chn, int x, i
     return (entropyR + entropyG + entropyB) / 3.0;
 }
     
-
 // Memilih dan memanggil metode pengukuran error yang sesuai
 double calcError(unsigned char* imgData, int imgW, int imgH, int chn, int x, int y, int w, int h, int method){
     switch (method) {
