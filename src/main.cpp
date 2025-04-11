@@ -17,11 +17,28 @@ using hrc = chrono::high_resolution_clock;
 using millisec = chrono::milliseconds;
 using chrono::duration_cast;
 
+void printHeader() {
+
+cout << "===============================================================" << endl;
+    cout << R"(
+        ___  _   _   _    ____ _____ ____  _____ _____ 
+       / _ \| | | | / \  |  _ \_   _|  _ \| ____| ____|
+      | | | | | | |/ _ \ | | | || | | |_) |  _| |  _|  
+      | |_| | |_| / ___ \| |_| || | |  _ <| |___| |___ 
+       \__\_\\___/_/   \_\____/ |_| |_| \_\_____|_____|
+
+===============================================================
+
+)" << endl;
+}
+
 int main() {
     string inPath, outPath, gifPath;
     int errMethod, minBlk;
     double thresh, targetComp;
-    
+
+    printHeader();
+
     cout << "Masukkan path gambar input (ex: input.jpg): ";
     getline(cin, inPath);
     inPath = "test/" + inPath;
@@ -91,13 +108,16 @@ int main() {
     cout << "Masukkan path gambar output (ex: hasil.png): ";
     getline(cin, outPath);
     outPath = "test/" + outPath;
-    
+    cout << endl;
+    cout << "===============================================================" << endl;
+
     // Muat gambar dari file
     int w, h, ch;
     unsigned char *inImg = stbi_load(inPath.c_str(), &w, &h, &ch, 0);
     
     if (!inImg) {
         cerr << "Gagal memuat gambar! (perhatikan path atau format gambar)" << endl;
+        cout << "==============================================================="  << endl;
         return 0;
     }
     
@@ -128,21 +148,25 @@ int main() {
     // Simpan gambar hasil kompresi
     if (!stbi_write_png(outPath.c_str(), w, h, ch, outImg, w * ch)) {
         cerr << "Gagal menyimpan gambar!" << endl;
-    } else {
+    } 
+    else {
         cout << "Gambar berhasil disimpan di: " << outPath << endl;
+        cout << "==============================================================="  << endl;
     }
      
     // Hitung dan tampilkan statistik kompresi
     stats.compSize = stats.nodeCount * sizeof(QNode);
     double compPerc = (1.0 - (double)stats.compSize / stats.origSize) * 100.0;
-    
-    cout << "\n===== HASIL KOMPRESI =====" << endl;
+
+    cout << "======================= HASIL KOMPRESI ========================" << endl;
+    cout << endl;
     cout << "Waktu eksekusi: " << duration.count() << " ms" << endl;
     cout << "Ukuran gambar asli: " << stats.origSize << " bytes" << endl;
     cout << "Ukuran gambar terkompresi: " << stats.compSize << " bytes" << endl;
     cout << "Persentase kompresi: " << compPerc << "%" << endl;
     cout << "Kedalaman pohon: " << stats.maxDepth << endl;
     cout << "Jumlah simpul pada pohon: " << stats.nodeCount << endl;
+    cout << "==============================================================="  << endl;
     
     // Bersihkan memori
     stbi_image_free(inImg);
