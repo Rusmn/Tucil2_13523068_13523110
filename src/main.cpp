@@ -32,25 +32,36 @@ int main() {
     cout << "2. MAD" << endl;
     cout << "3. Max Diff" << endl;
     cout << "4. Entropi" << endl;
-    do {
+
+    while (true) {
         cout << "Pilih metode perhitungan error (1/2/3/4): ";
         cin >> errMethod;
-
-        if (errMethod < 1 || errMethod > 4) {
-            cout << "Input tidak valid. Silakan masukkan angka 1 hingga 4.\n" << endl;
+    
+        if (cin.fail()) {
+            cout << "Input tidak valid. Masukkan angka bulat antara 1 hingga 4.\n" << endl;
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            continue;
         }
-
-    } while (errMethod != 1 && errMethod != 2 && errMethod != 3 && errMethod != 4);
+    
+        if (errMethod >= 1 && errMethod <= 4) {
+            break; 
+        } 
+        else {
+            cout << "Input tidak valid. Masukkan angka 1 hingga 4.\n" << endl;
+        }
+    }
     
     while (true) {
         cout << "Nilai ambang batas (threshold): ";
         cin >> thresh;
 
         if (cin.fail()) {
-            cout << "Input tidak valid. Masukkan angka desimal (contoh: 0.5).\n" << endl;
+            cout << "Input tidak valid.\n" << endl;
             cin.clear();
             cin.ignore(10000, '\n');
-        } else {
+        } 
+        else {
             break;
         }
     }
@@ -81,7 +92,6 @@ int main() {
     getline(cin, outPath);
     outPath = "test/" + outPath;
     
-    
     // Muat gambar dari file
     int w, h, ch;
     unsigned char *inImg = stbi_load(inPath.c_str(), &w, &h, &ch, 0);
@@ -93,9 +103,8 @@ int main() {
     
     cout << "Gambar berhasil dimuat: " << w << "x" << h << " dengan " << ch << " channel" << endl;
     
-    auto startTime = hrc::now(); // Mulai pengukuran waktu eksekusi
+    auto startTime = hrc::now();
     
-    // Inisialisasi statistik dan ukuran gambar asli
     QStats stats;
     stats.origSize = calcImgSize(w, h, ch);
     
@@ -105,7 +114,6 @@ int main() {
     // Hasil Quadtree
     unsigned char *outImg = new unsigned char[w * h * ch];
     
-    // Inisialisasi outImg dengan latar belakang putih (255)
     for (int i = 0; i < w * h * ch; i++) {
         outImg[i] = 255;
     }
