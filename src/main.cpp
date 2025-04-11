@@ -31,28 +31,55 @@ int main() {
     cout << "1. Varian" << endl; 
     cout << "2. MAD" << endl;
     cout << "3. Max Diff" << endl;
-    cout << "4. Entropi" << endl; 
-    cout << "Pilih metode perhitungan error (1/2/3/4): ";
-    cin >> errMethod;
-    cout << endl;
+    cout << "4. Entropi" << endl;
+    do {
+        cout << "Pilih metode perhitungan error (1/2/3/4): ";
+        cin >> errMethod;
+
+        if (errMethod < 1 || errMethod > 4) {
+            cout << "Input tidak valid. Silakan masukkan angka 1 hingga 4.\n" << endl;
+        }
+
+    } while (errMethod != 1 && errMethod != 2 && errMethod != 3 && errMethod != 4);
     
-    cout << "Nilai ambang batas (threshold): ";
-    cin >> thresh;
-    cout << endl;
+    while (true) {
+        cout << "Nilai ambang batas (threshold): ";
+        cin >> thresh;
+
+        if (cin.fail()) {
+            cout << "Input tidak valid. Masukkan angka desimal (contoh: 0.5).\n" << endl;
+            cin.clear();
+            cin.ignore(10000, '\n');
+        } else {
+            break;
+        }
+    }
     
     cout << "Ukuran blok minimum: ";
     cin >> minBlk;
-    cout << endl;
+    while(minBlk < 1) {
+        cout << "Ukuran blok minimum harus lebih besar dari 0.\n" << endl;
+        cout << "Ukuran blok minimum: ";
+        cin >> minBlk;
+    }
     
-    cout << "Target persentase kompresi (0.0-1.0, 0 untuk menonaktifkan): ";
-    cin >> targetComp;
-    cout << endl;
-    
-    cin.ignore(); //membersihkan buffer
+    while (true) {
+        cout << "Target persentase kompresi (0.0 - 1.0, 0 untuk menonaktifkan): ";
+        cin >> targetComp;
+
+        if (cin.fail() || targetComp < 0.0 || targetComp > 1.0) {
+            cout << "Input tidak valid. Masukkan angka antara 0.0 hingga 1.0.\n" << endl;
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        } else {
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            break;
+        }
+    }
+
     cout << "Masukkan path gambar output (ex: hasil.png): ";
     getline(cin, outPath);
     outPath = "test/" + outPath;
-    cout << endl;
     
     cout << "Masukkan path gif (kosongkan jika tidak digunakan): ";
     getline(cin, gifPath);
